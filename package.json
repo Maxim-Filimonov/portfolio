@@ -1,0 +1,13 @@
+{
+  "name": "MyPortfolioManual",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "parcel": "^1.12.3"
+  },
+  "scripts": {
+    "start": "parcel ./index.html"
+  }
+}
