@@ -46,7 +46,7 @@ update msg model =
 
 view : Model -> Document Msg
 view model =
-    { title = "I will update with Url"
+    { title = "Current url: " ++ model.url.path
     , body =
         [ div []
             [ text <| "Hello"
