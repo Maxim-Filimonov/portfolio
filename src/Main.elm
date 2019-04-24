@@ -2,8 +2,8 @@ module Main exposing (main)
 
 import Browser exposing (Document, UrlRequest, application)
 import Browser.Navigation exposing (Key, load, pushUrl)
-import Html exposing (a, div, p, text)
-import Html.Attributes exposing (href)
+import Element exposing (Element, column, el, link, padding, row, spacing, text)
+import Element.Font exposing (underline)
 import Url exposing (Url)
 
 
@@ -48,15 +48,18 @@ view : Model -> Document Msg
 view model =
     { title = "Current url: " ++ model.url.path
     , body =
-        [ div []
-            [ text <| "Hello"
-            , p []
-                [ a [ href "http://google.com" ] [ text "External link" ]
+        [ Element.layout [] <|
+            column [ spacing 7, padding 10 ]
+                [ el [] (text model.url.path)
+                , link [ underline ]
+                    { url = "http://google.com"
+                    , label = text "External link"
+                    }
+                , link [ underline ]
+                    { url = "/contact"
+                    , label = text "Contact"
+                    }
                 ]
-            , p []
-                [ a [ href "/contact" ] [ text "Contact" ]
-                ]
-            ]
         ]
     }
 
