@@ -9,7 +9,8 @@
   },
   "scripts": {
     "start": "parcel ./index.html",
-    "docs": "elm-doc-preview ."
+    "docs": "elm-doc-preview .",
+    "build": "parcel build ./index.html"
   },
   "devDependencies": {
     "elm-doc-preview": "^2.0.3",
