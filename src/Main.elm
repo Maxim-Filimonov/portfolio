@@ -2,9 +2,13 @@ module Main exposing (main)
 
 import Browser exposing (Document, UrlRequest, application)
 import Browser.Navigation exposing (Key, load, pushUrl)
-import Element exposing (Element, column, el, link, padding, row, spacing, text)
+import Element exposing (..)
 import Element.Font exposing (underline)
 import Url exposing (Url)
+
+
+
+-- MODEL
 
 
 type alias Flags =
@@ -17,14 +21,13 @@ type alias Model =
     }
 
 
-init : Flags -> Url -> Key -> ( Model, Cmd msg )
-init flags url key =
-    ( Model key url, Cmd.none )
-
-
 type Msg
     = UrlChanged Url
     | LinkClicked UrlRequest
+
+
+
+-- UPDATE
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -44,21 +47,32 @@ update msg model =
             )
 
 
+
+-- VIEW
+
+
 view : Model -> Document Msg
 view model =
     { title = "Current url: " ++ model.url.path
     , body =
         [ Element.layout [] <|
-            column [ spacing 7, padding 10 ]
-                [ el [] (text model.url.path)
-                , link [ underline ]
-                    { url = "http://google.com"
-                    , label = text "External link"
-                    }
-                , link [ underline ]
-                    { url = "/contact"
-                    , label = text "Contact"
-                    }
+            row [ centerY, spacingXY 10 0, padding 10 ]
+                [ column [ width <| fillPortion 1 ]
+                    [ image [] { src = "https://via.placeholder.com/350", description = "Portfolio photo" } ]
+                , column
+                    [ spacing 7, alignTop, paddingXY 0 10, width <| fillPortion 3 ]
+                    [ paragraph []
+                        [ el [] (text "I am a full stack software engineer with over a decade of experience in various industries. I have been part of large enterprises, world renown consultancies, and core team member of multiple startups. I focus on writing maintainable software aiming to help my clients to have long-lived products which are easy to adapt to future requirements. \nBesides programming,  I frequently do infrastructure work such as setting up build systems, servers and make CSS styling changes all within one day. \n")
+                        , link [ underline ]
+                            { url = "http://google.com"
+                            , label = text "External link"
+                            }
+                        , link [ underline ]
+                            { url = "/contact"
+                            , label = text "Contact"
+                            }
+                        ]
+                    ]
                 ]
         ]
     }
@@ -73,3 +87,8 @@ main =
         , subscriptions = \_ -> Sub.none
         , update = update
         }
+
+
+init : Flags -> Url -> Key -> ( Model, Cmd msg )
+init flags url key =
+    ( Model key url, Cmd.none )

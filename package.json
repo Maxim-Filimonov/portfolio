@@ -9,11 +9,11 @@
   },
   "scripts": {
     "start": "parcel ./index.html",
-    "docs": "elm-doc-preview .",
+    "docs": "elm-doc .",
     "build": "parcel build ./index.html"
   },
   "devDependencies": {
-    "elm-doc-preview": "^2.0.3",
+    "elm-doc": "0.0.2",
     "elm-hot": "^1.0.1",
     "node-elm-compiler": "^5.0.3"
   }
