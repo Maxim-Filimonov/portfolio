@@ -15,9 +15,14 @@ type alias Flags =
     {}
 
 
+type Page
+    = Home
+
+
 type alias Model =
     { key : Key
     , url : Url
+    , page : Page
     }
 
 
@@ -51,9 +56,16 @@ update msg model =
 -- VIEW
 
 
+viewPage : Page -> { title : String }
+viewPage page =
+    case page of
+        Home ->
+            { title = "About Maxim Filimonov" }
+
+
 view : Model -> Document Msg
 view model =
-    { title = "Current url: " ++ model.url.path
+    { title = viewPage model.page |> .title
     , body =
         [ Element.layout [] <|
             row [ centerY, spacingXY 10 0, padding 10 ]
@@ -91,4 +103,4 @@ main =
 
 init : Flags -> Url -> Key -> ( Model, Cmd msg )
 init flags url key =
-    ( Model key url, Cmd.none )
+    ( Model key url Home, Cmd.none )
