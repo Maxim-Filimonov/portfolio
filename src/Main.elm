@@ -63,27 +63,40 @@ viewPage page =
             { title = "About Maxim Filimonov" }
 
 
+viewPhotoUrl : Element msg
+viewPhotoUrl =
+    image [] { src = "https://via.placeholder.com/350", description = "Portfolio photo" }
+
+
+viewDescription : Element msg
+viewDescription =
+    el [] (text "I am a full stack software engineer with over a decade of experience in various industries. I have been part of large enterprises, world renown consultancies, and core team member of multiple startups. I focus on writing maintainable software aiming to help my clients to have long-lived products which are easy to adapt to future requirements. \nBesides programming,  I frequently do infrastructure work such as setting up build systems, servers and make CSS styling changes all within one day. \n")
+
+
+viewLinks : List (Element msg)
+viewLinks =
+    [ link [ underline ]
+        { url = "http://google.com"
+        , label = text "External link"
+        }
+    , link [ underline ]
+        { url = "/contact"
+        , label = text "Contact"
+        }
+    ]
+
+
 view : Model -> Document Msg
 view model =
     { title = viewPage model.page |> .title
     , body =
         [ Element.layout [] <|
             row [ centerY, spacingXY 10 0, padding 10 ]
-                [ column [ width <| fillPortion 1 ]
-                    [ image [] { src = "https://via.placeholder.com/350", description = "Portfolio photo" } ]
+                [ column [ width <| fillPortion 1 ] [ viewPhotoUrl ]
                 , column
                     [ spacing 7, alignTop, paddingXY 0 10, width <| fillPortion 3 ]
-                    [ paragraph []
-                        [ el [] (text "I am a full stack software engineer with over a decade of experience in various industries. I have been part of large enterprises, world renown consultancies, and core team member of multiple startups. I focus on writing maintainable software aiming to help my clients to have long-lived products which are easy to adapt to future requirements. \nBesides programming,  I frequently do infrastructure work such as setting up build systems, servers and make CSS styling changes all within one day. \n")
-                        , link [ underline ]
-                            { url = "http://google.com"
-                            , label = text "External link"
-                            }
-                        , link [ underline ]
-                            { url = "/contact"
-                            , label = text "Contact"
-                            }
-                        ]
+                    [ List.append paragraph [ viewDescription ]
+                        ++ viewLinks
                     ]
                 ]
         ]
