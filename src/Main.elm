@@ -107,14 +107,32 @@ viewDescription =
 
 viewLinks : List (Element msg)
 viewLinks =
-    [ link [ underline ]
-        { url = "http://google.com"
-        , label = text "External link"
-        }
-    , link [ underline ]
-        { url = "/contact"
-        , label = text "Contact"
-        }
+    [ row [ spacingXY 10 0, alignRight ]
+        [ link [ underline ]
+            { url = "https://github.com/Maxim-Filimonov"
+            , label =
+                image []
+                    { src = "https://res.cloudinary.com/tpaktop/image/upload/w_90/github.jpg"
+                    , description = "Github Profile"
+                    }
+            }
+        , link [ underline ]
+            { url = "https://twitter.com/TPAKTOP"
+            , label =
+                image []
+                    { src = "https://res.cloudinary.com/tpaktop/image/upload/w_30/v1568623686/twitter.png"
+                    , description = "Twitter Profile"
+                    }
+            }
+        , link [ underline ]
+            { url = "https://medium.com/@TPAKTOP"
+            , label =
+                image []
+                    { src = "https://res.cloudinary.com/tpaktop/image/upload/c_scale,w_60/v1568623841/medium.png"
+                    , description = "Medium Blog"
+                    }
+            }
+        ]
     ]
 
 
