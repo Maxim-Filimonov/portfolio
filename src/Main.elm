@@ -1,11 +1,14 @@
 module Main exposing (main)
 
 import Browser exposing (Document, UrlRequest, application)
+import Browser.Dom
+import Browser.Events
 import Browser.Navigation exposing (Key, load, pushUrl)
 import Element exposing (..)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font exposing (underline)
+import Task
 import Url exposing (Url)
 
 
@@ -25,12 +28,21 @@ type alias Model =
     { key : Key
     , url : Url
     , page : Page
+    , viewPort : Maybe WindowSize
+    }
+
+
+type alias WindowSize =
+    { height : Int
+    , width : Int
     }
 
 
 type Msg
     = UrlChanged Url
     | LinkClicked UrlRequest
+    | GetViewport Browser.Dom.Viewport
+    | ViewPortChanged Int Int
 
 
 
@@ -50,6 +62,16 @@ update msg model =
 
         UrlChanged url ->
             ( { model | url = url }
+            , Cmd.none
+            )
+
+        GetViewport viewPort ->
+            ( { model | viewPort = Just <| WindowSize (round viewPort.scene.height) (round viewPort.scene.width) }, Cmd.none )
+
+        ViewPortChanged width height ->
+            ( { model
+                | viewPort = Just <| WindowSize height width
+              }
             , Cmd.none
             )
 
@@ -139,11 +161,21 @@ main =
         , view = view
         , onUrlChange = UrlChanged
         , onUrlRequest = LinkClicked
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = subscriptions
         , update = update
         }
 
 
-init : Flags -> Url -> Key -> ( Model, Cmd msg )
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Browser.Events.onResize ViewPortChanged
+
+
+getInitialWindowSize : Cmd Msg
+getInitialWindowSize =
+    Task.perform (\viewport -> GetViewport viewport) Browser.Dom.getViewport
+
+
+init : Flags -> Url -> Key -> ( Model, Cmd Msg )
 init flags url key =
-    ( Model key url Home, Cmd.none )
+    ( Model key url Home Nothing, getInitialWindowSize )
