@@ -8,6 +8,7 @@ import Element exposing (..)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font exposing (underline)
+import Gravatar
 import Task
 import Url exposing (Url)
 
@@ -89,7 +90,14 @@ viewPage page =
 
 viewPhotoUrl : Element msg
 viewPhotoUrl =
-    image [] { src = "https://via.placeholder.com/350", description = "Portfolio photo" }
+    let
+        gravatarOptions =
+            Gravatar.defaultOptions |> Gravatar.withSize (Just 250)
+    in
+    image [ Border.rounded 30, Element.clip, centerX ]
+        { src = Gravatar.url gravatarOptions "tpaktopsp@gmail.com"
+        , description = "Portfolio photo"
+        }
 
 
 viewDescription : Element msg
