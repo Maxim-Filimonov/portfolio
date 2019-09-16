@@ -3,6 +3,8 @@ module Main exposing (main)
 import Browser exposing (Document, UrlRequest, application)
 import Browser.Navigation exposing (Key, load, pushUrl)
 import Element exposing (..)
+import Element.Background as Background
+import Element.Border as Border
 import Element.Font exposing (underline)
 import Url exposing (Url)
 
@@ -86,17 +88,45 @@ viewLinks =
     ]
 
 
+menuSeparator : Element msg
+menuSeparator =
+    el
+        [ Border.width 1
+        , padding 3
+        , Background.color <| rgb255 0 0 0
+        , Border.rounded 5
+        ]
+    <|
+        text ""
+
+
+menu : Element msg
+menu =
+    Element.row [ centerX, spacing 7 ]
+        [ link [] { url = "/", label = text "Home" }
+        , menuSeparator
+        , link [] { url = "/experience", label = text "Experience" }
+        , menuSeparator
+        , link [] { url = "#contact", label = text "Contact" }
+        ]
+
+
 view : Model -> Document Msg
 view model =
     { title = viewPage model.page |> .title
     , body =
         [ Element.layout [] <|
-            row [ centerY, spacingXY 10 0, padding 10 ]
-                [ column [ width <| fillPortion 1 ] [ viewPhotoUrl ]
-                , column
-                    [ spacing 7, alignTop, paddingXY 0 10, width <| fillPortion 3 ]
-                    [ List.append paragraph [ viewDescription ]
-                        ++ viewLinks
+            column
+                [ width fill
+                ]
+                [ menu
+                , row [ centerY, spacingXY 10 0, padding 10 ]
+                    [ column [ width <| fillPortion 1 ] [ viewPhotoUrl ]
+                    , column
+                        [ spacing 7, alignTop, paddingXY 0 10, width <| fillPortion 3 ]
+                      <|
+                        List.append [ paragraph [] [ viewDescription ] ]
+                            viewLinks
                     ]
                 ]
         ]
