@@ -4,3 +4,5 @@ node_modules
 dist
 .cache
 elm-stuff
+# Temp 0.19.1 testing 
+elm

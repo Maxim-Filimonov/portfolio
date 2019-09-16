@@ -4,7 +4,8 @@ import Browser exposing (Document, UrlRequest, application)
 import Browser.Dom
 import Browser.Events
 import Browser.Navigation exposing (Key, load, pushUrl)
-import Element exposing (..)
+import Data exposing (fetchExperiences)
+import Element exposing (Element, alignRight, alignTop, centerX, centerY, column, el, fill, fillPortion, image, link, padding, paddingXY, paragraph, rgb255, row, spacing, spacingXY, text, width)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font exposing (underline)
@@ -30,6 +31,7 @@ type alias Model =
     , url : Url
     , page : Page
     , viewPort : Maybe WindowSize
+    , data : Data.Model
     }
 
 
@@ -44,6 +46,7 @@ type Msg
     | LinkClicked UrlRequest
     | GetViewport Browser.Dom.Viewport
     | ViewPortChanged Int Int
+    | Data Data.Msg
 
 
 
@@ -75,6 +78,13 @@ update msg model =
               }
             , Cmd.none
             )
+
+        Data dataMsg ->
+            let
+                ( innerModel, innerCmd ) =
+                    Data.update dataMsg model.data
+            in
+            ( { model | data = innerModel }, Cmd.map Data innerCmd )
 
 
 
@@ -159,6 +169,11 @@ menu =
         ]
 
 
+viewExperiences : Model -> Element Msg
+viewExperiences model =
+    el [] <| text "Experiences"
+
+
 view : Model -> Document Msg
 view model =
     { title = viewPage model.page |> .title
@@ -176,6 +191,7 @@ view model =
                         List.append [ paragraph [] [ viewDescription ] ]
                             viewLinks
                     ]
+                , viewExperiences model
                 ]
         ]
     }
@@ -204,4 +220,11 @@ getInitialWindowSize =
 
 init : Flags -> Url -> Key -> ( Model, Cmd Msg )
 init flags url key =
-    ( Model key url Home Nothing, getInitialWindowSize )
+    ( { key = key
+      , url = url
+      , page = Home
+      , viewPort = Nothing
+      , data = Data.init
+      }
+    , Cmd.batch [ getInitialWindowSize, Cmd.map Data fetchExperiences ]
+    )

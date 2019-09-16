@@ -12,9 +12,11 @@
   "scripts": {
     "start": "parcel ./index.html",
     "docs": "elm-doc-preview .",
-    "build": "parcel build ./index.html"
+    "build": "parcel build ./index.html",
+    "generate-elm-types": "elm-graphql https://portfolio-data.herokuapp.com/v1/graphql --base PortfolioData"
   },
   "devDependencies": {
+    "@dillonkearns/elm-graphql": "^3.6.2",
     "elm-hot": "^1.0.1",
     "node-elm-compiler": "^5.0.3"
   }
