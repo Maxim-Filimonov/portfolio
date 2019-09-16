@@ -52,20 +52,3 @@ update msg model =
 init : Model
 init =
     { experiences = [] }
-
-
-
--- import Hasura.Enum.Order_by exposing (Order_by(..))
--- import Hasura.InputObject
---     exposing
---         ( Boolean_comparison_exp
---         , Todos_bool_exp
---         , Todos_order_by
---         , buildBoolean_comparison_exp
---         , buildTodos_bool_exp
---         , buildTodos_order_by
---         )
--- import Hasura.Object
--- import Hasura.Object.Todos as Todos
--- import Hasura.Object.Users as Users
--- import Hasura.Query as Query exposing (TodosOptionalArguments)
