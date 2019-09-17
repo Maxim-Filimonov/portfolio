@@ -4,8 +4,8 @@ import Browser exposing (Document, UrlRequest, application)
 import Browser.Dom
 import Browser.Events
 import Browser.Navigation exposing (Key, load, pushUrl)
-import Data exposing (fetchExperiences)
-import Element exposing (Element, alignRight, alignTop, centerX, centerY, column, el, fill, fillPortion, image, link, padding, paddingXY, paragraph, rgb255, row, spacing, spacingXY, text, width)
+import Data exposing (Experience, fetchExperiences)
+import Element exposing (Element, alignRight, alignTop, centerX, centerY, column, el, fill, fillPortion, image, link, padding, paddingXY, paragraph, px, rgb255, row, spacing, spacingXY, text, width)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font exposing (underline)
@@ -169,9 +169,35 @@ menu =
         ]
 
 
+viewExperience : Experience -> Element Msg
+viewExperience experience =
+    let
+        unknownDefault =
+            Maybe.withDefault "Unknown"
+
+        companyName =
+            unknownDefault experience.company_name
+
+        role =
+            unknownDefault experience.role
+    in
+    row [ Border.width 1 ]
+        [ column [ spacing 10 ]
+            [ el [] <| text companyName
+            , el [] <| text role
+            ]
+        ]
+
+
 viewExperiences : Model -> Element Msg
 viewExperiences model =
-    el [] <| text "Experiences"
+    column [] <| List.map viewExperience model.data.experiences
+
+
+
+-- column []
+--     ([ el [] <| text "Experiences" ]
+--     )
 
 
 view : Model -> Document Msg

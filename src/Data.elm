@@ -1,4 +1,4 @@
-module Data exposing (Model, Msg, fetchExperiences, init, update)
+module Data exposing (Experience, Model, Msg, fetchExperiences, init, update)
 
 -- import PortfolioData.Object.Experiences as Experiences
 
@@ -6,7 +6,8 @@ import GraphQLClient exposing (makeGraphQLQuery)
 import Graphql.Http
 import Graphql.Operation exposing (RootQuery)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
-import Graphql.SelectionSet exposing (SelectionSet)
+import Graphql.SelectionSet as SelectionSet exposing (SelectionSet)
+import PortfolioData.Object
 import PortfolioData.Object.Experiences
 import PortfolioData.Query as Query
 import RemoteData exposing (RemoteData)
@@ -26,12 +27,25 @@ type alias Model =
 
 
 type alias Response =
-    List Int
+    List Experience
+
+
+type alias Experience =
+    { company_name : Maybe String
+    , role : Maybe String
+    }
+
+
+experienceSelection : SelectionSet Experience PortfolioData.Object.Experiences
+experienceSelection =
+    SelectionSet.map2 Experience
+        PortfolioData.Object.Experiences.company_name
+        PortfolioData.Object.Experiences.role
 
 
 queryExperiences : SelectionSet Response RootQuery
 queryExperiences =
-    Query.experiences (\args -> args) PortfolioData.Object.Experiences.id
+    Query.experiences (\args -> args) experienceSelection
 
 
 fetchExperiences : Cmd Msg
