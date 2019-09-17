@@ -181,17 +181,18 @@ viewExperience experience =
         role =
             unknownDefault experience.role
     in
-    row [ Border.width 1 ]
+    row [ Element.explain <| Debug.todo, width fill ]
         [ column [ spacing 10 ]
             [ el [] <| text companyName
             , el [] <| text role
+            , column [] <| List.map (\t -> el [] <| text t.name) experience.tags
             ]
         ]
 
 
 viewExperiences : Model -> Element Msg
 viewExperiences model =
-    column [] <| List.map viewExperience model.data.experiences
+    column [ centerX ] <| List.map viewExperience model.data.experiences
 
 
 

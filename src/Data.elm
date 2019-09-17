@@ -8,6 +8,8 @@ import Graphql.Operation exposing (RootQuery)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet)
 import PortfolioData.Object
+import PortfolioData.Object.Classifications
+import PortfolioData.Object.Experience_classifications
 import PortfolioData.Object.Experiences
 import PortfolioData.Query as Query
 import RemoteData exposing (RemoteData)
@@ -33,14 +35,36 @@ type alias Response =
 type alias Experience =
     { company_name : Maybe String
     , role : Maybe String
+    , tags : List Classification
     }
+
+
+type alias Classification =
+    { name : String
+    , label : Maybe String
+    }
+
+
+classificationsSelection : SelectionSet (List Classification) PortfolioData.Object.Experiences
+classificationsSelection =
+    PortfolioData.Object.Experiences.experience_classifications (\args -> args)
+        classificationSelection
+
+
+classificationSelection : SelectionSet Classification PortfolioData.Object.Experience_classifications
+classificationSelection =
+    PortfolioData.Object.Experience_classifications.classification <|
+        SelectionSet.map2 Classification
+            PortfolioData.Object.Classifications.name
+            PortfolioData.Object.Classifications.label
 
 
 experienceSelection : SelectionSet Experience PortfolioData.Object.Experiences
 experienceSelection =
-    SelectionSet.map2 Experience
+    SelectionSet.map3 Experience
         PortfolioData.Object.Experiences.company_name
         PortfolioData.Object.Experiences.role
+        classificationsSelection
 
 
 queryExperiences : SelectionSet Response RootQuery
