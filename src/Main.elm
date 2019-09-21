@@ -190,9 +190,9 @@ viewExperience experience =
         ]
 
 
-viewExperiences : Model -> Element Msg
-viewExperiences model =
-    column [ centerX ] <| List.map viewExperience model.data.experiences
+viewExperiences : List Experience -> Element Msg
+viewExperiences experiences =
+    column [ centerX ] <| List.map viewExperience experiences
 
 
 
@@ -203,6 +203,14 @@ viewExperiences model =
 
 view : Model -> Document Msg
 view model =
+    let
+        filterFeaturedExperience : Experience -> Bool
+        filterFeaturedExperience experience =
+            List.any (String.contains "featured") <| List.map .name experience.tags
+
+        featuredExperiences =
+            List.filter filterFeaturedExperience model.data.experiences
+    in
     { title = viewPage model.page |> .title
     , body =
         [ Element.layout [] <|
@@ -218,7 +226,7 @@ view model =
                         List.append [ paragraph [] [ viewDescription ] ]
                             viewLinks
                     ]
-                , viewExperiences model
+                , viewExperiences featuredExperiences
                 ]
         ]
     }

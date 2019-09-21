@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module PortfolioData.Query exposing (ClassificationsByPkRequiredArguments, ClassificationsOptionalArguments, ExperienceClassificationsByPkRequiredArguments, ExperienceClassificationsOptionalArguments, ExperiencesByPkRequiredArguments, ExperiencesOptionalArguments, classifications, classifications_by_pk, experience_classifications, experience_classifications_by_pk, experiences, experiences_by_pk)
+module PortfolioData.Query exposing (ClassificationsByPkRequiredArguments, ClassificationsOptionalArguments, ExperienceClassificationsByPkRequiredArguments, ExperienceClassificationsOptionalArguments, ExperiencesByClassificationOptionalArguments, ExperiencesByClassificationRequiredArguments, ExperiencesByPkRequiredArguments, ExperiencesOptionalArguments, classifications, classifications_by_pk, experience_classifications, experience_classifications_by_pk, experiences, experiences_by_classification, experiences_by_pk)
 
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
@@ -137,6 +137,42 @@ experiences fillInOptionals object_ =
                 |> List.filterMap identity
     in
     Object.selectionForCompositeField "experiences" optionalArgs object_ (identity >> Decode.list)
+
+
+type alias ExperiencesByClassificationOptionalArguments =
+    { distinct_on : OptionalArgument (List PortfolioData.Enum.Experiences_select_column.Experiences_select_column)
+    , limit : OptionalArgument Int
+    , offset : OptionalArgument Int
+    , order_by : OptionalArgument (List PortfolioData.InputObject.Experiences_order_by)
+    , where_ : OptionalArgument PortfolioData.InputObject.Experiences_bool_exp
+    }
+
+
+type alias ExperiencesByClassificationRequiredArguments =
+    { args : PortfolioData.InputObject.Experiences_by_classification_args }
+
+
+{-| execute function "experiences\_by\_classification" which returns "experiences"
+
+  - args - input parameters for function "experiences\_by\_classification"
+  - distinct\_on - distinct select on columns
+  - limit - limit the nuber of rows returned
+  - offset - skip the first n rows. Use only with order\_by
+  - order\_by - sort the rows by one or more columns
+  - where\_ - filter the rows returned
+
+-}
+experiences_by_classification : (ExperiencesByClassificationOptionalArguments -> ExperiencesByClassificationOptionalArguments) -> ExperiencesByClassificationRequiredArguments -> SelectionSet decodesTo PortfolioData.Object.Experiences -> SelectionSet (List decodesTo) RootQuery
+experiences_by_classification fillInOptionals requiredArgs object_ =
+    let
+        filledInOptionals =
+            fillInOptionals { distinct_on = Absent, limit = Absent, offset = Absent, order_by = Absent, where_ = Absent }
+
+        optionalArgs =
+            [ Argument.optional "distinct_on" filledInOptionals.distinct_on (Encode.enum PortfolioData.Enum.Experiences_select_column.toString |> Encode.list), Argument.optional "limit" filledInOptionals.limit Encode.int, Argument.optional "offset" filledInOptionals.offset Encode.int, Argument.optional "order_by" filledInOptionals.order_by (PortfolioData.InputObject.encodeExperiences_order_by |> Encode.list), Argument.optional "where" filledInOptionals.where_ PortfolioData.InputObject.encodeExperiences_bool_exp ]
+                |> List.filterMap identity
+    in
+    Object.selectionForCompositeField "experiences_by_classification" (optionalArgs ++ [ Argument.required "args" requiredArgs.args PortfolioData.InputObject.encodeExperiences_by_classification_args ]) object_ (identity >> Decode.list)
 
 
 type alias ExperiencesByPkRequiredArguments =

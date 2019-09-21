@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module PortfolioData.InputObject exposing (Classifications_bool_exp(..), Classifications_bool_expOptionalFields, Classifications_bool_expRaw, Classifications_order_by, Classifications_order_byOptionalFields, Date_comparison_exp, Date_comparison_expOptionalFields, Experience_classifications_bool_exp(..), Experience_classifications_bool_expOptionalFields, Experience_classifications_bool_expRaw, Experience_classifications_order_by, Experience_classifications_order_byOptionalFields, Experiences_bool_exp(..), Experiences_bool_expOptionalFields, Experiences_bool_expRaw, Experiences_order_by, Experiences_order_byOptionalFields, Int_comparison_exp, Int_comparison_expOptionalFields, String_comparison_exp, String_comparison_expOptionalFields, buildClassifications_bool_exp, buildClassifications_order_by, buildDate_comparison_exp, buildExperience_classifications_bool_exp, buildExperience_classifications_order_by, buildExperiences_bool_exp, buildExperiences_order_by, buildInt_comparison_exp, buildString_comparison_exp, encodeClassifications_bool_exp, encodeClassifications_order_by, encodeDate_comparison_exp, encodeExperience_classifications_bool_exp, encodeExperience_classifications_order_by, encodeExperiences_bool_exp, encodeExperiences_order_by, encodeInt_comparison_exp, encodeString_comparison_exp)
+module PortfolioData.InputObject exposing (Classifications_bool_exp(..), Classifications_bool_expOptionalFields, Classifications_bool_expRaw, Classifications_order_by, Classifications_order_byOptionalFields, Date_comparison_exp, Date_comparison_expOptionalFields, Experience_classifications_bool_exp(..), Experience_classifications_bool_expOptionalFields, Experience_classifications_bool_expRaw, Experience_classifications_order_by, Experience_classifications_order_byOptionalFields, Experiences_bool_exp(..), Experiences_bool_expOptionalFields, Experiences_bool_expRaw, Experiences_by_classification_args, Experiences_by_classification_argsOptionalFields, Experiences_order_by, Experiences_order_byOptionalFields, Int_comparison_exp, Int_comparison_expOptionalFields, String_comparison_exp, String_comparison_expOptionalFields, buildClassifications_bool_exp, buildClassifications_order_by, buildDate_comparison_exp, buildExperience_classifications_bool_exp, buildExperience_classifications_order_by, buildExperiences_bool_exp, buildExperiences_by_classification_args, buildExperiences_order_by, buildInt_comparison_exp, buildString_comparison_exp, encodeClassifications_bool_exp, encodeClassifications_order_by, encodeDate_comparison_exp, encodeExperience_classifications_bool_exp, encodeExperience_classifications_order_by, encodeExperiences_bool_exp, encodeExperiences_by_classification_args, encodeExperiences_order_by, encodeInt_comparison_exp, encodeString_comparison_exp)
 
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
@@ -289,6 +289,34 @@ encodeExperiences_bool_exp : Experiences_bool_exp -> Value
 encodeExperiences_bool_exp (Experiences_bool_exp input) =
     Encode.maybeObject
         [ ( "_and", (encodeExperiences_bool_exp |> Encode.maybe |> Encode.list) |> Encode.optional input.and_ ), ( "_not", encodeExperiences_bool_exp |> Encode.optional input.not_ ), ( "_or", (encodeExperiences_bool_exp |> Encode.maybe |> Encode.list) |> Encode.optional input.or_ ), ( "company_name", encodeString_comparison_exp |> Encode.optional input.company_name ), ( "end_date", encodeDate_comparison_exp |> Encode.optional input.end_date ), ( "experience_classifications", encodeExperience_classifications_bool_exp |> Encode.optional input.experience_classifications ), ( "id", encodeInt_comparison_exp |> Encode.optional input.id ), ( "role", encodeString_comparison_exp |> Encode.optional input.role ), ( "start_date", encodeDate_comparison_exp |> Encode.optional input.start_date ) ]
+
+
+buildExperiences_by_classification_args : (Experiences_by_classification_argsOptionalFields -> Experiences_by_classification_argsOptionalFields) -> Experiences_by_classification_args
+buildExperiences_by_classification_args fillOptionals =
+    let
+        optionals =
+            fillOptionals
+                { search = Absent }
+    in
+    { search = optionals.search }
+
+
+type alias Experiences_by_classification_argsOptionalFields =
+    { search : OptionalArgument String }
+
+
+{-| Type for the Experiences\_by\_classification\_args input object.
+-}
+type alias Experiences_by_classification_args =
+    { search : OptionalArgument String }
+
+
+{-| Encode a Experiences\_by\_classification\_args into a value that can be used as an argument.
+-}
+encodeExperiences_by_classification_args : Experiences_by_classification_args -> Value
+encodeExperiences_by_classification_args input =
+    Encode.maybeObject
+        [ ( "search", Encode.string |> Encode.optional input.search ) ]
 
 
 buildExperiences_order_by : (Experiences_order_byOptionalFields -> Experiences_order_byOptionalFields) -> Experiences_order_by

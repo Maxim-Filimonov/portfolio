@@ -7,6 +7,7 @@ import Graphql.Http
 import Graphql.Operation exposing (RootQuery)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet)
+import PortfolioData.InputObject exposing (buildClassifications_bool_exp, buildExperiences_bool_exp)
 import PortfolioData.Object
 import PortfolioData.Object.Classifications
 import PortfolioData.Object.Experience_classifications
@@ -65,6 +66,11 @@ experienceSelection =
         PortfolioData.Object.Experiences.company_name
         PortfolioData.Object.Experiences.role
         classificationsSelection
+
+
+classificationFilter : String -> Query.ExperiencesByClassificationRequiredArguments
+classificationFilter classification =
+    { args = { search = Present classification } }
 
 
 queryExperiences : SelectionSet Response RootQuery
