@@ -255,7 +255,7 @@ view model =
     in
     { title = currentPage.title
     , body =
-        [ Element.layout [] <|
+        [ Element.layout [ paddingXY 0 10 ] <|
             column
                 [ width (fill |> Element.maximum 960)
                 , centerX
