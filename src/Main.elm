@@ -210,15 +210,27 @@ view model =
 
         featuredExperiences =
             List.filter filterFeaturedExperience model.data.experiences
+
+        determineLayoutType : { a | width : Int } -> List (Element.Attribute msg) -> List (Element msg) -> Element msg
+        determineLayoutType viewPort =
+            if viewPort.width > 670 then
+                row
+
+            else
+                column
+
+        layoutType =
+            Maybe.withDefault row <| Maybe.map determineLayoutType model.viewPort
     in
     { title = viewPage model.page |> .title
     , body =
         [ Element.layout [] <|
             column
-                [ width fill
+                [ width (fill |> Element.maximum 960)
+                , centerX
                 ]
                 [ menu
-                , row [ centerY, spacingXY 10 0, padding 10 ]
+                , layoutType [ spacingXY 10 0, padding 10 ]
                     [ column [ width <| fillPortion 1 ] [ viewPhotoUrl ]
                     , column
                         [ spacing 7, alignTop, paddingXY 0 10, width <| fillPortion 3 ]
