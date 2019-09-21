@@ -23,7 +23,8 @@ type alias Flags =
 
 
 type Page
-    = Home
+    = HomePage
+    | ExperiencesPage
 
 
 type alias Model =
@@ -65,7 +66,7 @@ update msg model =
                     ( model, load href )
 
         UrlChanged url ->
-            ( { model | url = url }
+            ( { model | url = url, page = determinePage url }
             , Cmd.none
             )
 
@@ -91,11 +92,56 @@ update msg model =
 -- VIEW
 
 
-viewPage : Page -> { title : String }
-viewPage page =
-    case page of
-        Home ->
-            { title = "About Maxim Filimonov" }
+viewPage : Model -> { title : String, body : List (Element.Element Msg) }
+viewPage model =
+    let
+        filterFeaturedExperience : Experience -> Bool
+        filterFeaturedExperience experience =
+            List.any (String.contains "featured") <| List.map .name experience.tags
+
+        featuredExperiences =
+            List.filter filterFeaturedExperience model.data.experiences
+
+        determineLayoutType : { a | width : Int } -> List (Element.Attribute msg) -> List (Element msg) -> Element msg
+        determineLayoutType viewPort =
+            if viewPort.width > 670 then
+                row
+
+            else
+                column
+
+        layoutType =
+            Maybe.withDefault row <| Maybe.map determineLayoutType model.viewPort
+    in
+    case model.page of
+        HomePage ->
+            { title = "About Maxim Filimonov"
+            , body =
+                [ layoutType [ spacingXY 10 0, padding 10 ]
+                    [ column [ width <| fillPortion 1 ] [ viewPhotoUrl ]
+                    , column
+                        [ spacing 7, alignTop, paddingXY 0 10, width <| fillPortion 3 ]
+                      <|
+                        List.append [ paragraph [] [ viewDescription ] ]
+                            viewLinks
+                    ]
+                , viewExperiences featuredExperiences
+                ]
+            }
+
+        ExperiencesPage ->
+            { title = "Experience of Maxim Filimonov"
+            , body = [ Element.text "Experiences will be here" ]
+            }
+
+
+determinePage : Url -> Page
+determinePage url =
+    if String.endsWith "experience" url.path then
+        ExperiencesPage
+
+    else
+        HomePage
 
 
 viewPhotoUrl : Element msg
@@ -204,42 +250,19 @@ viewExperiences experiences =
 view : Model -> Document Msg
 view model =
     let
-        filterFeaturedExperience : Experience -> Bool
-        filterFeaturedExperience experience =
-            List.any (String.contains "featured") <| List.map .name experience.tags
-
-        featuredExperiences =
-            List.filter filterFeaturedExperience model.data.experiences
-
-        determineLayoutType : { a | width : Int } -> List (Element.Attribute msg) -> List (Element msg) -> Element msg
-        determineLayoutType viewPort =
-            if viewPort.width > 670 then
-                row
-
-            else
-                column
-
-        layoutType =
-            Maybe.withDefault row <| Maybe.map determineLayoutType model.viewPort
+        currentPage =
+            viewPage model
     in
-    { title = viewPage model.page |> .title
+    { title = currentPage.title
     , body =
         [ Element.layout [] <|
             column
                 [ width (fill |> Element.maximum 960)
                 , centerX
                 ]
-                [ menu
-                , layoutType [ spacingXY 10 0, padding 10 ]
-                    [ column [ width <| fillPortion 1 ] [ viewPhotoUrl ]
-                    , column
-                        [ spacing 7, alignTop, paddingXY 0 10, width <| fillPortion 3 ]
-                      <|
-                        List.append [ paragraph [] [ viewDescription ] ]
-                            viewLinks
-                    ]
-                , viewExperiences featuredExperiences
-                ]
+                ([ menu ]
+                    ++ currentPage.body
+                )
         ]
     }
 
@@ -269,7 +292,7 @@ init : Flags -> Url -> Key -> ( Model, Cmd Msg )
 init flags url key =
     ( { key = key
       , url = url
-      , page = Home
+      , page = HomePage
       , viewPort = Nothing
       , data = Data.init
       }
